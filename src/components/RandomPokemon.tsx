@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import '../styles/Pokemon.css'; // Assurez-vous que ce fichier CSS est présent
+import '../assets/styles/RandomPokemon.css';
 
 interface PokemonData {
   name: {
@@ -8,7 +8,7 @@ interface PokemonData {
     jp: string;
   };
   sprites: {
-    regular: string; // URL de l'image du Pokémon
+    regular: string;
   };
   height: number;
   weight: number;
@@ -16,14 +16,17 @@ interface PokemonData {
     name: string;
     image: string;
   }[];
-  evolution?: any; // Définissez ce type selon vos données d'évolution
+  evolution?: any;
 }
 
-const Pokemon: React.FC = () => {
-  const [data, setData] = useState<PokemonData | null>(null);
-  const maxPokemon = 150; // Limiter aux 150 premiers Pokémon
+interface RandomPokemonProps {
+  isDarkMode: boolean;
+}
 
-  // Fonction pour récupérer un Pokémon par ID
+const RandomPokemon: React.FC<RandomPokemonProps> = ({ isDarkMode }) => {
+  const [data, setData] = useState<PokemonData | null>(null);
+  const maxPokemon = 150;
+
   const fetchPokemon = async (id: number) => {
     try {
       const res = await fetch(`https://tyradex.vercel.app/api/v1/pokemon/${id}`);
@@ -34,29 +37,25 @@ const Pokemon: React.FC = () => {
       setData(data);
     } catch (error) {
       console.error('Error fetching Pokemon data:', error);
-      setData(null); // Vous pouvez afficher un message d'erreur ici si vous le souhaitez
+      setData(null);
     }
   };
 
-  // Fonction pour générer un nouvel ID parmi les 150 premiers Pokémon
   const generateRandomPokemon = () => {
-    const randomId = Math.floor(Math.random() * maxPokemon) + 1; // ID entre 1 et 150
+    const randomId = Math.floor(Math.random() * maxPokemon) + 1;
     fetchPokemon(randomId);
   };
 
-  // Utiliser useEffect pour récupérer un Pokémon au chargement initial
   useEffect(() => {
-    generateRandomPokemon(); // Charger un Pokémon au chargement du composant
+    generateRandomPokemon();
   }, []);
 
-  // Fonction pour afficher les évolutions si elles existent
   const renderEvolutions = (evolutions: any) => {
-    // Implémentez cette fonction selon vos données d'évolution
-    return <div>{/* Render evolutions here */}</div>;
+    return <div className='content'>{/* Render evolutions here */}</div>;
   };
 
   return (
-    <div className="pokemon-container">
+    <div className={`pokemon-container ${isDarkMode ? 'dark-mode' : ''}`}>
       <div className="pokemon-infos-global">
         <h1 className="pokemon-title">Pokémon</h1>
         {data && (
@@ -94,4 +93,4 @@ const Pokemon: React.FC = () => {
   );
 };
 
-export default Pokemon;
+export default RandomPokemon;
