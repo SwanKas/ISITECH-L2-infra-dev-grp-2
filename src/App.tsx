@@ -39,6 +39,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/pokemon-list" element={<PokemonList />} />
             <Route path="/favorites" element={<Favorites />} />
+            
           </Routes>
         </main>
       </div>
