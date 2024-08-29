@@ -49,7 +49,7 @@ const styles = {
   },
   navLink: {
     textDecoration: 'none',
-    color: 'white',
+    color: 'white', 
     display: 'block',
     padding: '10px 15px',
   },
