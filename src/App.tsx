@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import Navbar from './Navbar.tsx';
+import Navbar from './components/Navbar.tsx';
 import Home from './pages/Home';
 import PokemonList from './pages/PokemonList';
 import Favorites from './pages/Favorites';
@@ -23,28 +23,26 @@ function App() {
 
   return (
     <Router>
-      <FavoritesProvider>
-        <div>
-          <Navbar />
-          <button
-            style={{
-              ...styles.toggleButton,
-              backgroundColor: isDarkMode ? 'white' : '#282c34',
-              color: isDarkMode ? '#282c34' : 'white',
-            }}
-            onClick={toggleTheme}
-          >
-            {isDarkMode ? 'Light' : 'Dark'} Mode
-          </button>
-          <main style={styles.mainContent}>
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/pokemon-list" element={<PokemonList />} />
-              <Route path="/favorites" element={<Favorites />} />
-            </Routes>
-          </main>
-        </div>
-      </FavoritesProvider>
+      <div>
+        <Navbar isDarkMode={isDarkMode} />
+        <button
+          style={{
+            ...styles.toggleButton,
+            backgroundColor: isDarkMode ? 'white' : '#282c34',
+            color: isDarkMode ? '#282c34' : 'white',
+          }}
+          onClick={toggleTheme}
+        >
+          {isDarkMode ? 'Light' : 'Dark'} Mode
+        </button>
+        <main style={styles.mainContent}>
+          <Routes>
+            <Route path="/" element={<Home isDarkMode={isDarkMode} />} />
+            <Route path="/pokemon-list" element={<PokemonList isDarkMode={isDarkMode} />} />
+            <Route path="/favorites" element={<Favorites isDarkMode={isDarkMode} />} />
+          </Routes>
+        </main>
+      </div>
     </Router>
   );
 }
@@ -56,8 +54,8 @@ const styles = {
   },
   toggleButton: {
     position: 'fixed',
-    top: '100px',
-    left: '30px',
+    top: '100px',        
+    right: '30px',       
     padding: '10px 15px',
     backgroundColor: '#282c34',
     color: 'white',
