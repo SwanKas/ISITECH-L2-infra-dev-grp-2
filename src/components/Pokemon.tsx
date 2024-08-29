@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import '../styles/Pokemon.css'; // Assurez-vous que ce fichier CSS est présent
+import { useFavorites } from '../context/FavoritesContext';
 
 interface PokemonData {
+  id: number;
   name: {
     fr: string;
     en: string;
@@ -21,9 +23,11 @@ interface PokemonData {
 
 const Pokemon: React.FC = () => {
   const [data, setData] = useState<PokemonData | null>(null);
+  const { favorites, addFavorite, removeFavorite } = useFavorites();
   const maxPokemon = 150; // Limiter aux 150 premiers Pokémon
-
+  const [isFavorite, setIsFavorite] = useState(false);
   // Fonction pour récupérer un Pokémon par ID
+
   const fetchPokemon = async (id: number) => {
     try {
       const res = await fetch(`https://tyradex.vercel.app/api/v1/pokemon/${id}`);
@@ -32,6 +36,7 @@ const Pokemon: React.FC = () => {
       }
       const data: PokemonData = await res.json();
       setData(data);
+      console.log("pokemon: ", data)
     } catch (error) {
       console.error('Error fetching Pokemon data:', error);
       setData(null); // Vous pouvez afficher un message d'erreur ici si vous le souhaitez
@@ -54,6 +59,44 @@ const Pokemon: React.FC = () => {
     // Implémentez cette fonction selon vos données d'évolution
     return <div>{/* Render evolutions here */}</div>;
   };
+
+  useEffect(() => {
+    if (data) {
+      const isCurrentlyFavorite = favorites.some(fav => fav.id === data.id);
+      setIsFavorite(isCurrentlyFavorite);
+    }
+  }, [data, favorites]);
+
+  const handleAddFavorite = () => {
+    if (data) {
+      addFavorite({
+        id: data.id,
+        name: data.name.fr,
+        sprites: data.sprites,
+        height: data.height,
+        weight: data.weight,
+        types: data.types,
+        evolution: data.evolution,
+      });
+      console.log('Added to favorites:', data.name.fr);
+      setIsFavorite(true);
+    }
+  };
+
+  const handleRemoveFavorite = () => {
+    if (data) {
+      removeFavorite(data.id);
+      console.log('Removed from favorites:', data.id);
+      setIsFavorite(false);
+    }
+  };
+  useEffect(() => {
+    if (data) {
+      setIsFavorite(favorites.some(fav => fav.id === data.id));
+    }
+  }, [data]);
+
+  console.log("id pokemon", data)
 
   return (
     <div className="pokemon-container">
@@ -90,6 +133,20 @@ const Pokemon: React.FC = () => {
         {data && data.evolution && renderEvolutions(data.evolution)}
       </div>
       <button className="pokemon-button" onClick={generateRandomPokemon}>Générer un nouveau Pokémon</button>
+      <button
+        className="pokemon-button"
+        onClick={handleAddFavorite}
+        disabled={isFavorite} // Désactiver si déjà favori
+      >
+        Ajouter aux favoris
+      </button>
+      <button
+        className="pokemon-button"
+        onClick={handleRemoveFavorite}
+        disabled={!isFavorite} // Désactiver si pas encore favori
+      >
+        Retirer des favoris
+      </button>
     </div>
   );
 };

@@ -4,6 +4,7 @@ import Home from './pages/Home';
 import PokemonList from './pages/PokemonList';
 import Favorites from './pages/Favorites';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { FavoritesProvider } from './context/FavoritesContext';
 
 function App() {
   const [isDarkMode, setIsDarkMode] = useState(false);
