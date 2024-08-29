@@ -51,7 +51,7 @@ const RandomPokemon: React.FC<RandomPokemonProps> = ({ isDarkMode }) => {
   }, []);
 
   const renderEvolutions = (evolutions: any) => {
-    return <div>{/* Render evolutions here */}</div>;
+    return <div className='content'>{/* Render evolutions here */}</div>;
   };
 
   return (

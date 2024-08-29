@@ -1,0 +1,89 @@
+.pokemon-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 20px;
+  background-color: white;
+  color: black;
+}
+
+.home {
+  margin: 0 auto;
+  display: inline-flex
+}
+
+
+.pokemon-container.dark-mode {
+  background-color: #282c34;
+  color: white;
+}
+
+.pokemon-infos-global {
+  text-align: center;
+}
+
+.pokemon-title {
+  font-size: 2rem;
+  margin-bottom: 10px;
+}
+
+.pokemon-info {
+  margin: 10px 0;
+}
+
+.pokemon-image {
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.pokemon-name {
+  font-weight: bold;
+}
+
+.pokemon-height,
+.pokemon-weight,
+.pokemon-type {
+  font-style: italic;
+}
+
+.pokemon-type-label {
+  font-weight: bold;
+}
+
+.pokemon-type-image-container {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  justify-content: center;
+}
+
+.pokemon-button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  background-color: #007bff;
+  color: white;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-top: 20px;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.pokemon-button:hover {
+  background-color: #0056b3;
+  color: #282c34
+}
+
+.pokemon-container.dark-mode .pokemon-button {
+  background-color: #0056b3;
+}
+
+.pokemon-container.dark-mode .pokemon-button:hover {
+  background-color: #e0e0e0;
+}
+
+.h1 {
+  text-align: center;
+}
