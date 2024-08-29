@@ -65,4 +65,4 @@ To address these issues, we created a dedicated Discord group for our team. This
 
 For example, we pinned a detailed explanation of our commit message convention. This ensured that all team members could easily refer to it whenever needed, leading to a more consistent and organized commit history. By centralizing our communication and making key decisions readily accessible, we significantly improved our collaboration and overall workflow.
 
-![Alt text](../ISITECH-L2-infra-dev-grp-2/src/assets/img/message.png)
+![Alt text](./src/assets/img/message.png)
