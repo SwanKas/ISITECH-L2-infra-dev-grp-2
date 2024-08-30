@@ -2,6 +2,7 @@ import React from 'react';
 import Pokemon from '../components/RandomPokemon';
 import '../assets/styles/RandomPokemon.css';
 
+
 interface HomeProps {
   isDarkMode: boolean;
 }
