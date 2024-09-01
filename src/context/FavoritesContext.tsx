@@ -1,8 +1,10 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 
-interface Pokemon {
-  id: number;
-  name: string;
+interface PokemonData {
+  pokedex_id: number;
+  name: {
+    fr: string;
+  };
   sprites: {
     regular: string;
   };
@@ -16,24 +18,35 @@ interface Pokemon {
 }
 
 interface FavoritesContextType {
-  favorites: Pokemon[];
-  addFavorite: (pokemon: Pokemon) => void;
+  favorites: PokemonData[];
+  addFavorite: (pokemon: PokemonData) => void;
   removeFavorite: (pokemonId: number) => void;
 }
 
 const FavoritesContext = createContext<FavoritesContextType | undefined>(undefined);
 
-export const FavoritesProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [favorites, setFavorites] = useState<Pokemon[]>([]);
+export const FavoritesProvider = ({ children }: { children: ReactNode }) => {
+  const [favorites, setFavorites] = useState<PokemonData[]>(() => {
+    const storedFavorites = localStorage.getItem('favorites');
+    return storedFavorites ? JSON.parse(storedFavorites) : [];
+  });
 
-  const addFavorite = (pokemon: Pokemon) => {
-    setFavorites((prevFavorites) => [...prevFavorites, pokemon]);
+  useEffect(() => {
+    localStorage.setItem('favorites', JSON.stringify(favorites));
+  }, [favorites]);
+
+  const addFavorite = (pokemon: PokemonData) => {
+    setFavorites((prevFavorites) => {
+      if (!prevFavorites.some(p => p.pokedex_id === pokemon.pokedex_id)) {
+        return [...prevFavorites, pokemon];
+      }
+      return prevFavorites;
+    });
   };
 
   const removeFavorite = (pokemonId: number) => {
-    setFavorites((prevFavorites) => prevFavorites.filter(p => p.id !== pokemonId));
+    setFavorites((prevFavorites) => prevFavorites.filter(p => p.pokedex_id !== pokemonId));
   };
-  console.log('Favorites:', favorites);
   return (
     <FavoritesContext.Provider value={{ favorites, addFavorite, removeFavorite }}>
       {children}
