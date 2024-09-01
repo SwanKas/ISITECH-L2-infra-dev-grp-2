@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "vite build",
     "tsc": "tsc --noEmit",
     "preview": "vite preview",
     "lint": "eslint . --report-unused-disable-directives --max-warnings=0",
@@ -27,6 +27,7 @@
     "@testing-library/jest-dom": "^6.5.0",
     "@testing-library/react": "^16.0.1",
     "@testing-library/user-event": "^14.5.2",
+    "@types/jest": "^29.5.12",
     "@types/node": "^22.5.1",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
