@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import '../styles/Pokemon.css'; // Assurez-vous que ce fichier CSS est présent
+import '../styles/Pokemon.css';
 import { useFavorites } from '../context/FavoritesContext';
 
 interface PokemonData {
@@ -10,7 +10,7 @@ interface PokemonData {
     jp: string;
   };
   sprites: {
-    regular: string; // URL de l'image du Pokémon
+    regular: string;
   };
   height: number;
   weight: number;
@@ -18,15 +18,15 @@ interface PokemonData {
     name: string;
     image: string;
   }[];
-  evolution?: any; // Définissez ce type selon vos données d'évolution
+  evolution?: any;
 }
 
 const Pokemon: React.FC = () => {
   const [data, setData] = useState<PokemonData | null>(null);
   const { favorites, addFavorite, removeFavorite } = useFavorites();
-  const maxPokemon = 150; // Limiter aux 150 premiers Pokémon
+  const maxPokemon = 150;
   const [isFavorite, setIsFavorite] = useState(false);
-  // Fonction pour récupérer un Pokémon par ID
+
 
   const fetchPokemon = async (id: number) => {
     try {
@@ -36,10 +36,9 @@ const Pokemon: React.FC = () => {
       }
       const data: PokemonData = await res.json();
       setData(data);
-      console.log("pokemon: ", data)
     } catch (error) {
       console.error('Error fetching Pokemon data:', error);
-      setData(null); // Vous pouvez afficher un message d'erreur ici si vous le souhaitez
+      setData(null);
     }
   };
 
@@ -56,13 +55,13 @@ const Pokemon: React.FC = () => {
 
   // Fonction pour afficher les évolutions si elles existent
   const renderEvolutions = (evolutions: any) => {
-    // Implémentez cette fonction selon vos données d'évolution
+
     return <div>{/* Render evolutions here */}</div>;
   };
 
   useEffect(() => {
     if (data) {
-      const isCurrentlyFavorite = favorites.some(fav => fav.id === data.id);
+      const isCurrentlyFavorite = favorites.some(fav => fav.pokedex_id === data.id);
       setIsFavorite(isCurrentlyFavorite);
     }
   }, [data, favorites]);
@@ -70,15 +69,16 @@ const Pokemon: React.FC = () => {
   const handleAddFavorite = () => {
     if (data) {
       addFavorite({
-        id: data.id,
-        name: data.name.fr,
+        pokedex_id: data.id,
+        name: {
+          fr: data.name.fr,
+        },
         sprites: data.sprites,
         height: data.height,
         weight: data.weight,
         types: data.types,
         evolution: data.evolution,
       });
-      console.log('Added to favorites:', data.name.fr);
       setIsFavorite(true);
     }
   };
@@ -86,17 +86,15 @@ const Pokemon: React.FC = () => {
   const handleRemoveFavorite = () => {
     if (data) {
       removeFavorite(data.id);
-      console.log('Removed from favorites:', data.id);
       setIsFavorite(false);
     }
   };
   useEffect(() => {
     if (data) {
-      setIsFavorite(favorites.some(fav => fav.id === data.id));
+      setIsFavorite(favorites.some(fav => fav.pokedex_id === data.id));
     }
   }, [data]);
 
-  console.log("id pokemon", data)
 
   return (
     <div className="pokemon-container">

@@ -22,28 +22,30 @@ function App() {
   }, [isDarkMode]);
 
   return (
-    <Router>
-      <div>
-        <Navbar isDarkMode={isDarkMode} />
-        <button
-          style={{
-            ...styles.toggleButton,
-            backgroundColor: isDarkMode ? 'white' : '#282c34',
-            color: isDarkMode ? '#282c34' : 'white',
-          }}
-          onClick={toggleTheme}
-        >
-          {isDarkMode ? 'Light' : 'Dark'} Mode
-        </button>
-        <main style={styles.mainContent}>
-          <Routes>
-            <Route path="/" element={<Home isDarkMode={isDarkMode} />} />
-            <Route path="/pokemon-list" element={<PokemonList isDarkMode={isDarkMode} />} />
-            <Route path="/favorites" element={<Favorites isDarkMode={isDarkMode} />} />
-          </Routes>
-        </main>
-      </div>
-    </Router>
+    <FavoritesProvider>
+      <Router>
+        <div>
+          <Navbar isDarkMode={isDarkMode} />
+          <button
+            style={{
+              ...styles.toggleButton,
+              backgroundColor: isDarkMode ? 'white' : '#282c34',
+              color: isDarkMode ? '#282c34' : 'white',
+            }}
+            onClick={toggleTheme}
+          >
+            {isDarkMode ? 'Light' : 'Dark'} Mode
+          </button>
+          <main style={styles.mainContent}>
+            <Routes>
+              <Route path="/" element={<Home isDarkMode={isDarkMode} />} />
+              <Route path="/pokemon-list" element={<PokemonList isDarkMode={isDarkMode} />} />
+              <Route path="/favorites" element={<Favorites isDarkMode={isDarkMode} />} />
+            </Routes>
+          </main>
+        </div>
+      </Router>
+    </FavoritesProvider>
   );
 }
 
@@ -54,8 +56,8 @@ const styles = {
   },
   toggleButton: {
     position: 'fixed',
-    top: '100px',        
-    right: '30px',       
+    top: '100px',
+    right: '30px',
     padding: '10px 15px',
     backgroundColor: '#282c34',
     color: 'white',
