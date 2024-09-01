@@ -34,7 +34,7 @@ export default function PokemonList() {
     try {
       const pokemonList: PokemonData[] = [];
 
-      for (let i = 1; i <= 150; i++) {
+      for (let i = 1; i <= 151; i++) {
         const res = await fetch(`https://tyradex.vercel.app/api/v1/pokemon/${i}`);
         if (!res.ok) {
           throw new Error(`HTTP error! Status: ${res.status}`);

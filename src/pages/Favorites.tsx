@@ -2,12 +2,16 @@ import React from 'react';
 import { useFavorites } from "../context/FavoritesContext";
 import '../assets/styles/Favorites.css';
 
-const Favorites: React.FC = () => {
+interface FavoritesProps {
+  isDarkMode: boolean;
+}
+
+const Favorites: React.FC<FavoritesProps> = ({ isDarkMode }) => {
   const { favorites, removeFavorite } = useFavorites();
 
 
   return (
-    <div className="favorites-container">
+    <div className={`favorites-container ${isDarkMode ? 'dark' : 'light'}`}>
       <h1>Favoris</h1>
       <div className="favorites-list">
         {favorites.length === 0 ? (
