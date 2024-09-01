@@ -26,7 +26,7 @@ interface RandomPokemonProps {
 const RandomPokemon: React.FC<RandomPokemonProps> = ({ isDarkMode }) => {
   const [data, setData] = useState<PokemonData | null>(null);
   const { favorites, addFavorite, removeFavorite } = useFavorites();
-  const maxPokemon = 150;
+  const maxPokemon = 151;
 
   const fetchPokemon = async (id: number) => {
     try {

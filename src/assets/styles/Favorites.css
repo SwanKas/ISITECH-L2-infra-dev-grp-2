@@ -1,11 +1,16 @@
-.favorites-container {
-    padding: 20px;
-}
-
 .favorites-list {
     display: flex;
     flex-wrap: wrap;
     gap: 20px;
+}
+
+
+.favorites-container.light .pokemon-info {
+    color: #000000;
+}
+
+.favorites-container.dark .pokemon-info {
+    color: #ffffff;
 }
 
 .favorite-item {
@@ -40,4 +45,16 @@
 
 .pokemon-type {
     margin-right: 5px;
+}
+
+.favorites-container.light .favorite-item {
+    background-color: #f9f9f9;
+    color: #000000;
+    border: 1px solid #ddd;
+}
+
+.favorites-container.dark .favorite-item {
+    background-color: #444444;
+    color: #ffffff;
+    border: 1px solid #555555;
 }
