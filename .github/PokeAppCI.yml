@@ -6,6 +6,7 @@ on:
       - main
       - develop
       - feature/**
+      - feature/list-pokemon
   pull_request:
     branches:
       - main
@@ -13,20 +14,21 @@ on:
 
 jobs:
   type-check:
-    name: Run TypeScript Type-Check
+    name: renders a Pokémon's name on successful fetch
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '20.17.0' 
-
       - name: Install dependencies
         run: npm install
-
-      - name: Run TypeScript type-check
-        run: npm run tsc --noEmit
+      -name: Run Pokemon Display
+        run: npm run test
+      - name: Install playwright browser
+        run: npx playwright install --with-deps
+      - name: Run e2e test
+        run: npm run e2e
