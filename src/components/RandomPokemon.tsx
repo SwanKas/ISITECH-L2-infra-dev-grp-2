@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import '../assets/styles/RandomPokemon.css';
+import { useFavorites } from "../context/FavoritesContext";
 
 interface PokemonData {
+  pokedex_id: number;
   name: {
     fr: string;
-    en: string;
-    jp: string;
   };
   sprites: {
     regular: string;
@@ -25,6 +25,7 @@ interface RandomPokemonProps {
 
 const RandomPokemon: React.FC<RandomPokemonProps> = ({ isDarkMode }) => {
   const [data, setData] = useState<PokemonData | null>(null);
+  const { favorites, addFavorite, removeFavorite } = useFavorites();
   const maxPokemon = 150;
 
   const fetchPokemon = async (id: number) => {
@@ -49,6 +50,30 @@ const RandomPokemon: React.FC<RandomPokemonProps> = ({ isDarkMode }) => {
   useEffect(() => {
     generateRandomPokemon();
   }, []);
+
+  const isPokemonFavorite = (pokemonId: number) => {
+    return favorites.some((fav) => fav.pokedex_id === pokemonId);
+  };
+
+  const handleFavoriteClick = () => {
+    if (data) {
+      if (isPokemonFavorite(data.pokedex_id)) {
+        removeFavorite(data.pokedex_id);
+      } else {
+        addFavorite({
+          pokedex_id: data.pokedex_id,
+          name: {
+            fr: data.name.fr,
+          },
+          sprites: data.sprites,
+          height: data.height,
+          weight: data.weight,
+          types: data.types,
+          evolution: data.evolution,
+        });
+      }
+    }
+  };
 
   const renderEvolutions = (evolutions: any) => {
     return <div className='content'>{/* Render evolutions here */}</div>;
@@ -89,6 +114,12 @@ const RandomPokemon: React.FC<RandomPokemonProps> = ({ isDarkMode }) => {
         {data && data.evolution && renderEvolutions(data.evolution)}
       </div>
       <button className="pokemon-button" onClick={generateRandomPokemon}>Générer un nouveau Pokémon</button>
+      <button
+        className="pokemon-button"
+        onClick={handleFavoriteClick}
+      >
+        {data && isPokemonFavorite(data.pokedex_id) ? 'Retirer des favoris' : 'Ajouter aux favoris'}
+      </button>
     </div>
   );
 };

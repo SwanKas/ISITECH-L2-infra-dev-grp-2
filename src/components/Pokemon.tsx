@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import '../styles/Pokemon.css'; // Assurez-vous que ce fichier CSS est présent
+import '../styles/Pokemon.css';
+import { useFavorites } from '../context/FavoritesContext';
 
 interface PokemonData {
+  id: number;
   name: {
     fr: string;
     en: string;
     jp: string;
   };
   sprites: {
-    regular: string; // URL de l'image du Pokémon
+    regular: string;
   };
   height: number;
   weight: number;
@@ -16,14 +18,16 @@ interface PokemonData {
     name: string;
     image: string;
   }[];
-  evolution?: any; // Définissez ce type selon vos données d'évolution
+  evolution?: any;
 }
 
 const Pokemon: React.FC = () => {
   const [data, setData] = useState<PokemonData | null>(null);
-  const maxPokemon = 150; // Limiter aux 150 premiers Pokémon
+  const { favorites, addFavorite, removeFavorite } = useFavorites();
+  const maxPokemon = 150;
+  const [isFavorite, setIsFavorite] = useState(false);
 
-  // Fonction pour récupérer un Pokémon par ID
+
   const fetchPokemon = async (id: number) => {
     try {
       const res = await fetch(`https://tyradex.vercel.app/api/v1/pokemon/${id}`);
@@ -34,7 +38,7 @@ const Pokemon: React.FC = () => {
       setData(data);
     } catch (error) {
       console.error('Error fetching Pokemon data:', error);
-      setData(null); // Vous pouvez afficher un message d'erreur ici si vous le souhaitez
+      setData(null);
     }
   };
 
@@ -51,9 +55,46 @@ const Pokemon: React.FC = () => {
 
   // Fonction pour afficher les évolutions si elles existent
   const renderEvolutions = (evolutions: any) => {
-    // Implémentez cette fonction selon vos données d'évolution
+
     return <div>{/* Render evolutions here */}</div>;
   };
+
+  useEffect(() => {
+    if (data) {
+      const isCurrentlyFavorite = favorites.some(fav => fav.pokedex_id === data.id);
+      setIsFavorite(isCurrentlyFavorite);
+    }
+  }, [data, favorites]);
+
+  const handleAddFavorite = () => {
+    if (data) {
+      addFavorite({
+        pokedex_id: data.id,
+        name: {
+          fr: data.name.fr,
+        },
+        sprites: data.sprites,
+        height: data.height,
+        weight: data.weight,
+        types: data.types,
+        evolution: data.evolution,
+      });
+      setIsFavorite(true);
+    }
+  };
+
+  const handleRemoveFavorite = () => {
+    if (data) {
+      removeFavorite(data.id);
+      setIsFavorite(false);
+    }
+  };
+  useEffect(() => {
+    if (data) {
+      setIsFavorite(favorites.some(fav => fav.pokedex_id === data.id));
+    }
+  }, [data]);
+
 
   return (
     <div className="pokemon-container">
@@ -90,6 +131,20 @@ const Pokemon: React.FC = () => {
         {data && data.evolution && renderEvolutions(data.evolution)}
       </div>
       <button className="pokemon-button" onClick={generateRandomPokemon}>Générer un nouveau Pokémon</button>
+      <button
+        className="pokemon-button"
+        onClick={handleAddFavorite}
+        disabled={isFavorite} // Désactiver si déjà favori
+      >
+        Ajouter aux favoris
+      </button>
+      <button
+        className="pokemon-button"
+        onClick={handleRemoveFavorite}
+        disabled={!isFavorite} // Désactiver si pas encore favori
+      >
+        Retirer des favoris
+      </button>
     </div>
   );
 };

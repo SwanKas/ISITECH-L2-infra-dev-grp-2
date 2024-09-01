@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useFavorites } from '../context/FavoritesContext';
 
 interface Evolution {
   pokedex_id: number;
@@ -8,7 +9,7 @@ interface Evolution {
 }
 
 interface PokemonData {
-  id: number;
+  pokedex_id: number;
   sprites: {
     regular: string;
   };
@@ -27,11 +28,12 @@ interface PokemonData {
 export default function PokemonList() {
   const [data, setData] = useState<PokemonData[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const { favorites, addFavorite, removeFavorite } = useFavorites();
 
   const fetchData = async () => {
     try {
       const pokemonList: PokemonData[] = [];
-      
+
       for (let i = 1; i <= 150; i++) {
         const res = await fetch(`https://tyradex.vercel.app/api/v1/pokemon/${i}`);
         if (!res.ok) {
@@ -53,6 +55,18 @@ export default function PokemonList() {
     fetchData();
   }, []);
 
+  const isPokemonFavorite = (pokemonId: number) => {
+    return favorites.some((fav) => fav.pokedex_id === pokemonId);
+  };
+  const handleAddFavorite = (pokemon: PokemonData) => {
+    addFavorite(pokemon);
+  };
+
+
+  const handleRemoveFavorite = (pokemonId: number) => {
+    removeFavorite(pokemonId);
+  };
+
   const styles = {
     container: {
       width: '100%',
@@ -71,7 +85,7 @@ export default function PokemonList() {
       border: '1px solid #ddd',
     },
     th: {
-      
+
     },
     image: {
       display: 'block',
@@ -122,7 +136,7 @@ export default function PokemonList() {
         <table style={styles.table}>
           <thead>
             <tr>
-              <th style={styles.th}></th>
+              <th style={styles.th}>Numéro pokedex</th>
               <th style={styles.th}>Image</th>
               <th style={styles.th}>Nom</th>
               <th style={styles.th}>Hauteur</th>
@@ -131,21 +145,38 @@ export default function PokemonList() {
             </tr>
           </thead>
           <tbody>
-            {data.map((pokemon) => (
-              <tr key={pokemon.id}>
-                <td style={styles.thTd}>{pokemon.id}</td>
-                <td style={styles.thTd}>
-                  <img style={styles.image} width="50px" src={pokemon.sprites.regular} alt={pokemon.name.fr} />
-                </td>
-                <td style={styles.thTd}>{pokemon.name.fr}</td>
-                <td style={styles.thTd}>{pokemon.height}</td>
-                <td style={styles.thTd}>{pokemon.weight}</td>
-                <td style={styles.thTd}>{pokemon.types[0].name}</td>
-                <td style={styles.thTd}>
-                  <button style={styles.favButton}>Ajouter aux favoris</button>
-                </td>
-              </tr>
-            ))}
+            {data.map((pokemon) => {
+              const isFavorite = isPokemonFavorite(pokemon.pokedex_id);
+              return (
+                <tr key={pokemon.pokedex_id}>
+                  <td style={styles.thTd}>{pokemon.pokedex_id}</td>
+                  <td style={styles.thTd}>
+                    <img style={styles.image} width="50px" src={pokemon.sprites.regular} alt={pokemon.name.fr} />
+                  </td>
+                  <td style={styles.thTd}>{pokemon.name.fr}</td>
+                  <td style={styles.thTd}>{pokemon.height}</td>
+                  <td style={styles.thTd}>{pokemon.weight}</td>
+                  <td style={styles.thTd}>{pokemon.types[0].name}</td>
+                  <td style={styles.thTd}>
+                    {isFavorite ? (
+                      <button
+                        style={styles.favButton}
+                        onClick={() => handleRemoveFavorite(pokemon.pokedex_id)}
+                      >
+                        Retirer des favoris
+                      </button>
+                    ) : (
+                      <button
+                        style={styles.favButton}
+                        onClick={() => handleAddFavorite(pokemon)}
+                      >
+                        Ajouter aux favoris
+                      </button>
+                    )}
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       )}
