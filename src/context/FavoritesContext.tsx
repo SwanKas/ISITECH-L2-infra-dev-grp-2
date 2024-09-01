@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import { createContext, useContext, useState, ReactNode } from 'react';
 
 interface Pokemon {
   id: number;
@@ -23,17 +23,21 @@ interface FavoritesContextType {
 
 const FavoritesContext = createContext<FavoritesContextType | undefined>(undefined);
 
-export const FavoritesProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+export const FavoritesProvider = ({ children }: { children: ReactNode }) => {
   const [favorites, setFavorites] = useState<Pokemon[]>([]);
 
   const addFavorite = (pokemon: Pokemon) => {
-    setFavorites((prevFavorites) => [...prevFavorites, pokemon]);
+    setFavorites((prevFavorites) => {
+      if (!prevFavorites.some(p => p.id === pokemon.id)) {
+        return [...prevFavorites, pokemon];
+      }
+      return prevFavorites;
+    });
   };
 
   const removeFavorite = (pokemonId: number) => {
     setFavorites((prevFavorites) => prevFavorites.filter(p => p.id !== pokemonId));
   };
-  console.log('Favorites:', favorites);
   return (
     <FavoritesContext.Provider value={{ favorites, addFavorite, removeFavorite }}>
       {children}
